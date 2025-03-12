@@ -178,3 +178,6 @@ tokens.json
 
 # remove all DS store 
 **.DS_Store
+
+# all temp image files
+*.png
