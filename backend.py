@@ -26,7 +26,7 @@ def capture_question(filename="question.png"):
         "left": 0,
         "top": 0,
         "width": screen_width // 2,  # left half. HARDCODED
-        "height": screen_height
+        "height": screen_height // 2 # focus on top half. HARDCODED
     }
     with mss.mss() as sct:
         sct_img = sct.grab(region)
@@ -53,14 +53,10 @@ def get_answer(question):
     # queries API based on question that was extracted
     client = OpenAI(api_key=tokens['openai_key'])
     system_prompt = (
-        "You are an image analysis assistant. You are provided with a screenshot (in base64 format) of a multiple-choice question screen. "
-        "The answer options are displayed on the screen with labels such as A, B, C, etc. "
-        "Analyze the screenshot to determine which answer is correct."
-        "Return your answer as a singular letter. "
+        "Answer the multiple-choice question accurately. Answer with a single letter (A, B, C, D, E, or F.)"
     )
-
     user_prompt = [
-        { "type": "text", "text": "Answer this question accurately with a single letter (A, B, C, D, E, or F.)" },
+        { "type": "text", "text": "Answer this question accurately with a single letter (A, B, C, D, E, or F.) Only return a SINGLE letter." },
         {
             "type": "image_url",
             "image_url": {
@@ -82,14 +78,14 @@ def get_answer(question):
 #############################
 def select_answer(answer):
     """
-    Dynamically finds bounding boxes for letters A-F in the bottom portion
+    Using static input of bounding boxes for letters A-C in the bottom portion
     of the left half, then clicks the center of the matching letter.
     """
     # HARDCODED 
     answer_positions = {
-        "A": (236, 949),
-        "B": (350, 949),
-        "C": (466, 949)
+        "A": (202, 1063),
+        "B": (443, 1063),
+        "C": (681, 1063)
     }
     # if the letter was found by OCR, click it
     if answer in answer_positions:
